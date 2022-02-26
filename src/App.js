@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useState } from 'react'
+import { Box, Button, Heading, HStack, useColorMode } from "@chakra-ui/react";
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
+import { DataContext } from "./context/DataContext";
 
-function App() {
+const App = ()=>{
+  const {user} = useContext(DataContext)
+  const {toggleColorMode} = useColorMode()
+  const [isDark, setIsDark] = useState(false)
+  
+  //handle dark mode functionality
+  const handleDark = () =>{
+    setIsDark(()=>(isDark ? false : "true"))
+    toggleColorMode()
+  }
+  //check color mode
+  const colorLabel = () =>(!isDark ? "Set to Light" : "Set to Dark")
+
+  // render Dashboard otherwise Login
+  const renderComponent = () =>( user === null ? <Login /> : <Dashboard />)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Box>
+      <HStack bgColor={"green.500"} justifyContent={"flex-end"} p={".5rem"}>
+        <Heading fontSize={"lg"} flexGrow={1} color={"whiteAlpha.700"} textTransform={"uppercase"} letterSpacing={"1px"}>Patient Management</Heading>
+        <Button variant={"outline"} onClick={handleDark}>{colorLabel()}</Button>
+      </HStack>
+      
+      {/* components */}
+      {/* render Login or Dashboard */}
+      {renderComponent()}
+    </Box>
+  )
 }
 
 export default App;
